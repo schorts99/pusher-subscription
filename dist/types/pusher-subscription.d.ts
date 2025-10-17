@@ -5,7 +5,7 @@ export declare class PusherSubscription implements Subscription {
     private readonly channels;
     constructor(pusher: Pusher);
     connect(): void;
-    subscribe(channel: string, event: string, handler: (payload: any) => void): void;
+    subscribe(channel: string, event: string, handler: (payload: Record<string, any> | string) => void): void;
     unsubscribe(channel: string): void;
     disconnect(): void;
 }

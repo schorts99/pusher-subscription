@@ -1,7 +1,7 @@
 {
   "name": "@schorts/pusher-subscription",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "A lightweight, type-safe wrapper around Pusher JS for subscribing to real-time events in frontend applications. Implements the `Subscription` interface from `@schorts/shared-kernel`, enabling clean, modular integration with your pub-sub architecture.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
@@ -40,7 +40,8 @@
   "keywords": [
     "pub-sub",
     "subscription",
-    "pusher"
+    "pusher",
+    "websocket"
   ],
   "bugs": {
     "url": "https://github.com/schorts99/pusher-subscription/issues"

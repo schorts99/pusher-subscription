@@ -11,9 +11,12 @@ class PusherSubscription {
         this.pusher.connect();
     }
     subscribe(channel, event, handler) {
-        const ch = this.channels.get(channel) ?? this.pusher.subscribe(channel);
+        let ch = this.channels.get(channel);
+        if (!ch) {
+            ch = this.pusher.subscribe(channel);
+            this.channels.set(channel, ch);
+        }
         ch.bind(event, handler);
-        this.channels.set(channel, ch);
     }
     unsubscribe(channel) {
         this.pusher.unsubscribe(channel);

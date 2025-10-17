@@ -8,23 +8,28 @@ export class PusherSubscription implements Subscription {
     private readonly pusher: Pusher,
   ) {}
 
-  connect() {
+  connect(): void {
     this.pusher.connect();
   }
 
-  subscribe(channel: string, event: string, handler: (payload: any) => void) {
-    const ch = this.channels.get(channel) ?? this.pusher.subscribe(channel);
+  subscribe(channel: string, event: string, handler: (payload: Record<string, any> | string) => void): void {
+    let ch = this.channels.get(channel);
+  
+    if (!ch) {
+      ch = this.pusher.subscribe(channel);
 
+      this.channels.set(channel, ch);
+    }
+  
     ch.bind(event, handler);
-    this.channels.set(channel, ch);
   }
 
-  unsubscribe(channel: string) {
+  unsubscribe(channel: string): void {
     this.pusher.unsubscribe(channel);
     this.channels.delete(channel);
   }
 
-  disconnect() {
+  disconnect(): void {
     this.pusher.disconnect();
     this.channels.clear();
   }
