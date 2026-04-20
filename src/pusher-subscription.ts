@@ -1,7 +1,7 @@
+import { Subscriber, MessageHandler, Subscription } from "@schorts/shared-kernel";
 import Pusher, { Channel } from "pusher-js";
-import { Subscription } from "@schorts/shared-kernel";
 
-export class PusherSubscription implements Subscription {
+export class PusherSubscription implements Subscriber {
   private readonly channels = new Map<string, Channel>();
 
   constructor(
@@ -12,21 +12,25 @@ export class PusherSubscription implements Subscription {
     this.pusher.connect();
   }
 
-  subscribe(channel: string, event: string, handler: (payload: Record<string, any> | string) => void): void {
+  async subscribe<T = any>(
+    channel: string,
+    event: string,
+    handler: MessageHandler<T>,
+  ): Promise<Subscription> {
     let ch = this.channels.get(channel);
-  
+
     if (!ch) {
       ch = this.pusher.subscribe(channel);
-
       this.channels.set(channel, ch);
     }
-  
-    ch.bind(event, handler);
-  }
 
-  unsubscribe(channel: string): void {
-    this.pusher.unsubscribe(channel);
-    this.channels.delete(channel);
+    ch.bind(event, handler);
+
+    return {
+      unsubscribe: () => {
+        ch.unbind(event, handler);
+      },
+    };
   }
 
   disconnect(): void {
